@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset = "utf8">
   <title>
     FB Study
   </title>
 
   <style type="text/css">
   <!--
-  /*p {position:fixed;} */
   body {
     margin:0px;
   }
+
+  a {
+    text-decolation: none;
+    color:#FFFFFF;
+  }
+
+  a:visited {
+    color:#FFFFFF;
+  }
+
 
   .h1 {
     background-color:#444444;
@@ -20,7 +30,7 @@
   .h1 text{
     position:relative;
     left:50px;
-    color:gray;
+    color:#CCCCCC;
     font-size:x-large;
     }
 
@@ -33,12 +43,16 @@
     margin:10px;
   }
 
-  .contents loginb{
-    position:relative;
-    top: 20px;          /*contents textと、contents loginbがかぶる。もっとやり方あるはず*/
-    background-color:#AAAAFF;
-    padding:10px;
-    border : inset;　     /*ボタンがダサい*/
+  .contents a{
+    margin:0 auto;
+    width:150px;
+    text-align:center;
+    background-color: #3498db;
+    display:block;
+	  text-decoration:none;
+	  padding:8px;
+    border-radius:6px;
+    box-shadow: 0px 3px 0px 0px #3468bb !important;
   }
 
   .footer {
@@ -65,7 +79,7 @@
 <div class="contents">
   <text>ソーシャルアカウントでログイン</text>
 <br/>
-<loginb><a href="login.php">Facebookログイン</a></loginb>
+<a href="login.php">Facebookログイン</a>
 </div>
 
 <div class="footer">

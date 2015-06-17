@@ -1,4 +1,4 @@
 ***わからないところ***
 
 CSSについて
-・static,relative,absolute,fixedがよくわからない
+・static,relative,absolute,fixedがについて
