@@ -7,6 +7,8 @@ use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\GraphUser;
+use Facebook\GraphLocation;
+use Facebook\GraphSessionInfo;
 use Facebook\FacebookRequestException;
 
 
@@ -24,14 +26,25 @@ try {
 
 // see if we have a session
 if ( isset( $session ) ) {
- // graph api request for user data
- $request = new FacebookRequest( $session, 'GET', '/me' );
- $response = $request->execute();
- // get response
- $graphObject = $response->getGraphObject();
+ // // graph api request for user data
+ // $request = new FacebookRequest( $session, 'GET', '/me' );
+ // $response = $request->execute();
+ // // get response
+ // $graphObject = $response->getGraphObject();
+ //
+ // // print data
+ // echo  print_r( $graphObject, 1 );
 
- // print data
- echo  print_r( $graphObject, 1 );
+
+ print('<br/><br/>---------------------------------------------------------------------------------<br/><br/>');
+
+ $me = (new FacebookRequest($session, 'GET', '/me'));
+ $responseMe = $me->execute();
+ $graphObjectMe = $responseMe->getGraphObject();
+
+print('<pre>');
+var_dump($graphObjectMe);
+print('</pre>');
 
 
 } else {
