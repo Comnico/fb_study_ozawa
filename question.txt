@@ -2,3 +2,8 @@
 
 CSSについて
 ・static,relative,absolute,fixedがについて
+
+・大きい画像が取得できない
+・permissionの送信方法ってどうするの？
+・json_decodeできない
+・
