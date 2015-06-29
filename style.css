@@ -1,67 +1,70 @@
-
-body {
-  margin:0px;
-}
-
-.h1 {
-  position: fixed; /* 固定 */
-  top: 0; /* 一番上に表示 */
-  width: 100%; /* 中央に表示 */
-  background-color:#444444;
-  padding:5px;
-}
-
-.h1 text{
-  position:relative;
-  left:50px;
-  color:#CCCCCC;
-  font-size:x-large;
-  }
-
-.h1 text_logout{
-  position: relative;
-  float: right;
-  color: #CCCCCC;
-  font-size: large;
-  padding: 5px 50px;
-}
-
-.contents{
-  width: 700px;
-  overflow: auto; /* スクロールする範囲を制御 */
-  margin: 0px auto;
-  padding: 70px 0 70px; /* コンテンツ上下にスペース */
-  text-align:center;
-}
-
-.contents text{
-  margin:10px;
-}
-
-.main {
-  background-color: #dddddd;
-}
-
-.post {
-  margin:20px;
-  background-color: #ffffff;
-  padding : 20px 100px 50px 100px;
-  word-wrap:break-word; /*文字をはみださない*/
-}
-
-.post a{
-
-}
-
-.footer {
-}
-
-.footer text{
-  position: fixed; /* 固定 */
-  bottom:10px;
-  left:50px;
-  color:gray;
-  font-size:90%;
-}
-
--->
+    body {
+        margin: 0px;
+    }
+    a {
+        text-decoration: none;
+    }
+    a:visited {
+        text-decoration: none;
+    }
+    .h1 {
+        position: fixed;
+        /* 固定 */
+        top: 0;
+        /* 一番上に表示 */
+        width: 100%;
+        /* 中央に表示 */
+        background-color: #444444;
+        padding: 5px;
+    }
+    .h1 a {
+        color: #CCCCCC;
+    }
+    .h1 a:visited {
+        color: #CCCCCC;
+    }
+    .h1 text {
+        position: relative;
+        left: 50px;
+        color: #CCCCCC;
+        font-size: x-large;
+    }
+    .h1 text_logout {
+        position: relative;
+        float: right;
+        color: #CCCCCC;
+        font-size: large;
+        padding: 5px 50px;
+    }
+    .contents {
+        width: 700px;
+        overflow: auto;
+        /* スクロールする範囲を制御 */
+        margin: 0px auto;
+        padding: 70px 0 70px;
+        /* コンテンツ上下にスペース */
+        text-align: center;
+    }
+    .contents text {
+        margin: 10px;
+    }
+    .main {
+        background-color: #dddddd;
+    }
+    .post {
+        margin: 20px;
+        background-color: #ffffff;
+        padding: 20px 100px 50px 100px;
+        word-wrap: break-word;
+        /*文字をはみださない*/
+    }
+    .post a {}
+    .footer {}
+    .footer text {
+        position: fixed;
+        /* 固定 */
+        bottom: 10px;
+        left: 50px;
+        color: gray;
+        font-size: 90%;
+    }

@@ -1,24 +1,32 @@
 <?php
+
+
 require_once("vendor/autoload.php");
 // Make sure to load the Facebook SDK for PHP via composer or manually
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
-use Facebook\GraphUser;
 use Facebook\FacebookRequestException;
+use Facebook\GraphUser;
+use Facebook\GraphLocation;
+use Facebook\GraphSessionInfo;
 
 session_start();
 $session = $_SESSION['session'];
+$logout_url = $_SESSION['logout_url'];
+
 FacebookSession::setDefaultApplication('452878368210796', 'f0e25cc2d8ce6f0a8e2e80bf35c64081');
+
 
 
  // セッションデータの保持を確認。
  //　持っていない場合は、トップページにリダイレクト
  if ( isset( $session ) ) {
 
+
   // feedの全取得
-  $my_feed = new FacebookRequest( $session, 'GET', '/me/feed');
-  $response = $my_feed->execute();
+  $feed_request = new FacebookRequest( $session, 'GET', '/me/feed');
+  $response = $feed_request->execute();
   $feed = $response->getGraphObject()->getProperty('data')->asArray();
 
 
@@ -30,7 +38,7 @@ FacebookSession::setDefaultApplication('452878368210796', 'f0e25cc2d8ce6f0a8e2e8
      return $icon_url['url'];
    }
 
-   //ログアウトするfunction
+
 
 //以下、html
 
@@ -45,7 +53,11 @@ FacebookSession::setDefaultApplication('452878368210796', 'f0e25cc2d8ce6f0a8e2e8
 
   <div class="h1">
     <text>FB Study</text>
-    <text_logout>ログアウトする</text_logout>
+    <text_logout>
+      <a href=" <?php print($logout_url);?> ">
+      ログアウトする
+      </a>
+      </text_logout>
     </div>
 
 <div class="main">
@@ -64,14 +76,13 @@ FacebookSession::setDefaultApplication('452878368210796', 'f0e25cc2d8ce6f0a8e2e8
   <a href="http://www.facebook.com/<?php print($feed[$count]->id); ?> "><?php print($feed[$count]->updated_time);?></a>
   <?php @print($feed[$count]->message);?>
 
-  <?php @print('<img src="' . $feed[$count]->picture . '">'); ?>
+  <?php if ( isset ($feed[$count]->picture ) ) { @print('<img src="' . $feed[$count]->picture . '">'); } ?>
    <?php print('</div>'); ?>
 
    <?php
    $count ++;
  }
  $count = NULL;
- var_dump($feed);
 ?>
 
 </pre>
@@ -88,6 +99,10 @@ FacebookSession::setDefaultApplication('452878368210796', 'f0e25cc2d8ce6f0a8e2e8
 
 
 <?php
+
+// セッションデータを持っていない場合は、トップページにリダイレクト
+
+
  }else{
    header('location: login.php');
    exit();

@@ -3,11 +3,6 @@ require_once("vendor/autoload.php");
 // Make sure to load the Facebook SDK for PHP via composer or manually
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
-use Facebook\FacebookRequest;
-use Facebook\GraphUser;
-use Facebook\GraphLocation;
-use Facebook\GraphSessionInfo;
-use Facebook\FacebookRequestException;
 
 session_start();
 
@@ -18,7 +13,6 @@ $helper = new FacebookRedirectLoginHelper('http://localhost/fb_study_ozawa/login
 
 try {
  $session = $helper->getSessionFromRedirect();
-} catch( FacebookRequestException $ex ) {
  // When Facebook returns an error
 } catch( Exception $ex ) {
  // When validation fails or other local issues
@@ -27,12 +21,21 @@ try {
 //セッションを保持している場合は、main.phpに飛ぶ。それ以外(初回)は、facebookへリクエストを送る
 if ( isset( $session ) ) {
 
+//セッション情報と、ログアウトURLをmain.phpに渡す
 $_SESSION['session'] = $session;
+$_SESSION['logout_url'] = $helper->getLogoutUrl($session, 'http://localhost/fb_study_ozawa/index.php');
+
+//リダイレクト
 header('location: main.php');
 exit();
 
 } else {
- // show login url
- echo '<a href="' . $helper->getLoginUrl() . '">Login</a>';
 
+//permissionを追加したい場合は、$scopeに追記する。
+$scope = array('user_posts');
+$login_url = $helper->getLoginUrl($scope);
+
+//リダイレクト
+header("location: ${login_url}");
+exit();
 }
