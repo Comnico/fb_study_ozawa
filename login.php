@@ -22,8 +22,8 @@ try {
 if ( isset( $session ) ) {
 
 //セッション情報と、ログアウトURLをmain.phpに渡す
-$_SESSION['session'] = $session;
-$_SESSION['logout_url'] = $helper->getLogoutUrl($session, 'http://fb-study-ozawa.herokuapp.com/index.php');
+//$_SESSION['session'] = $session;
+//$_SESSION['logout_url'] = $helper->getLogoutUrl($session, 'http://fb-study-ozawa.herokuapp.com/index.php');
 
 //リダイレクト
 header('location: main.php');
