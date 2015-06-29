@@ -20,7 +20,7 @@ try {
 
 //セッションを保持している場合は、main.phpに飛ぶ。それ以外(初回)は、facebookへリクエストを送る
 if ( isset( $session ) ) {
-
+print_r($session);
 //セッション情報と、ログアウトURLをmain.phpに渡す
 //$_SESSION['session'] = $session;
 //$_SESSION['logout_url'] = $helper->getLogoutUrl($session, 'http://fb-study-ozawa.herokuapp.com/index.php');
