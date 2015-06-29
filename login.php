@@ -36,6 +36,7 @@ $scope = array('user_posts');
 $login_url = $helper->getLoginUrl($scope);
 
 //リダイレクト
-header("location: ${login_url}");
-exit();
+print('<a href="' . $login_url .'"> login </a>');
+//header("location: ${login_url}");
+//exit();
 }
