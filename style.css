@@ -19,10 +19,11 @@ body {
   }
 
 .h1 text_logout{
-  position:relative;
-  right:50px;
-  color:#CCCCCC;
-  font-size:x-large;
+  position: relative;
+  float: right;
+  color: #CCCCCC;
+  font-size: large;
+  padding: 5px 50px;
 }
 
 .contents{
