@@ -15,7 +15,7 @@ session_start();
 FacebookSession::setDefaultApplication('452878368210796', 'f0e25cc2d8ce6f0a8e2e80bf35c64081');
 
 $helper = new FacebookRedirectLoginHelper('http://fb-study-ozawa.herokuapp.com/login.php');
-print_r($helper);
+
 try {
  $session = $helper->getSessionFromRedirect();
  // When Facebook returns an error
@@ -27,8 +27,8 @@ print_r($session);
 if ( isset( $session ) ) {
 
 //セッション情報と、ログアウトURLをmain.phpに渡す
-//$_SESSION['session'] = $session;
-//$_SESSION['logout_url'] = $helper->getLogoutUrl($session, 'http://fb-study-ozawa.herokuapp.com/index.php');
+$_SESSION['session'] = $session;
+$_SESSION['logout_url'] = $helper->getLogoutUrl($session, 'http://fb-study-ozawa.herokuapp.com/index.php');
 
 //リダイレクト
 header('location: main.php');
@@ -41,7 +41,6 @@ $scope = array('user_posts');
 $login_url = $helper->getLoginUrl($scope);
 
 //リダイレクト
-print('<a href="' . $login_url .'"> login </a>');
-//header("location: ${login_url}");
-//exit();
+header("location: ${login_url}");
+exit();
 }
