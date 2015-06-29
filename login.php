@@ -9,7 +9,7 @@ session_start();
 
 FacebookSession::setDefaultApplication('452878368210796', 'f0e25cc2d8ce6f0a8e2e80bf35c64081');
 
-$helper = new FacebookRedirectLoginHelper('http://localhost/fb_study_ozawa/login.php');
+$helper = new FacebookRedirectLoginHelper('http://powerful-dawn-1463.herokuapp.com/login.php');
 
 try {
  $session = $helper->getSessionFromRedirect();
@@ -23,7 +23,7 @@ if ( isset( $session ) ) {
 
 //セッション情報と、ログアウトURLをmain.phpに渡す
 $_SESSION['session'] = $session;
-$_SESSION['logout_url'] = $helper->getLogoutUrl($session, 'http://localhost/fb_study_ozawa/index.php');
+$_SESSION['logout_url'] = $helper->getLogoutUrl($session, 'http://powerful-dawn-1463.herokuapp.com/index.php');
 
 //リダイレクト
 header('location: main.php');
