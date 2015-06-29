@@ -5,6 +5,8 @@ use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\GraphUser;
+use Facebook\GraphLocation;
+use Facebook\GraphSessionInfo;
 use Facebook\FacebookRequestException;
 
 session_start();
@@ -32,6 +34,5 @@ exit();
 } else {
  // show login url
  echo '<a href="' . $helper->getLoginUrl() . '">Login</a>';
- //header("location: $helper->getLoginUrl()");
- //exit();
+
 }
