@@ -104,6 +104,6 @@ FacebookSession::setDefaultApplication('452878368210796', 'f0e25cc2d8ce6f0a8e2e8
 
 
  }else{
-   header('location: login.php');
+   header('location: index.php');
    exit();
  }
