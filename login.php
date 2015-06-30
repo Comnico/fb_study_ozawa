@@ -3,6 +3,11 @@ require_once("vendor/autoload.php");
 // Make sure to load the Facebook SDK for PHP via composer or manually
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
+use Facebook\FacebookRequest;
+use Facebook\FacebookRequestException;
+use Facebook\GraphUser;
+use Facebook\GraphLocation;
+use Facebook\GraphSessionInfo;
 
 session_start();
 
@@ -17,7 +22,7 @@ try {
 } catch( Exception $ex ) {
  // When validation fails or other local issues
 }
-
+print_r($session);
 //セッションを保持している場合は、main.phpに飛ぶ。それ以外(初回)は、facebookへリクエストを送る
 if ( isset( $session ) ) {
 
