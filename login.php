@@ -1,34 +1,59 @@
 <?php
+
+/*******************************************************************************************/
+
+    /****************************************
+    *必要なファイルのrequire等を行う
+    ****************************************/
+
+//定数を外部ファイルから読み込み
+require_once ('constant.php');
+//composerのrequire
 require_once("vendor/autoload.php");
-// Make sure to load the Facebook SDK for PHP via composer or manually
+
+//FacebookSDKの中から、使用するものを選択
 use Facebook\FacebookSession;
 use Facebook\FacebookRedirectLoginHelper;
 
+//セッションのスタート
 session_start();
 
+//FacebookSessionの呼び出し
+FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
 
-FacebookSession::setDefaultApplication('452878368210796', 'f0e25cc2d8ce6f0a8e2e80bf35c64081');
+/*******************************************************************************************/
 
-$helper = new FacebookRedirectLoginHelper('http://fb-study-ozawa.herokuapp.com/login.php');
+    /****************************************
+    *Facebookからセッション情報を入手する
+    ****************************************/
 
+//リダイレクト先のURLを指定し、インスタンスを生成
+$helper = new FacebookRedirectLoginHelper(REDIRECT_URL);
+
+//セッション情報を取得
 try {
  $session = $helper->getSessionFromRedirect();
- // When Facebook returns an error
+
+ // Facebookがエラーを返した場合に、例外をcatchする
 } catch( Exception $ex ) {
- // When validation fails or other local issues
+ die($ex->getMessage);
 }
-//セッションを保持している場合は、main.phpに飛ぶ。それ以外(初回)は、facebookへリクエストを送る
+
+//セッションを保持している場合は、main.phpに飛ぶ。それ以外は、facebookへリクエストを送る
 if ( isset( $session ) ) {
 
 //セッション情報と、ログアウトURLをmain.phpに渡す
 $_SESSION['session'] = $session;
-$_SESSION['logout_url'] = $helper->getLogoutUrl($session, 'http://fb-study-ozawa.herokuapp.com/index.php');
+$_SESSION['logout_url'] = $helper->getLogoutUrl($session, AFTER_LOGOUT_URL);
 
-//リダイレクト
+//main.phpへリダイレクト
 header('location: main.php');
 exit();
 
+
+//以下、セッション情報を持っていない場合
 } else {
+
 
 //permissionを追加したい場合は、$scopeに追記する。
 $scope = array('user_posts');
