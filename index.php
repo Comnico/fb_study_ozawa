@@ -1,5 +1,5 @@
 <?php
-$hostname = php_uname("n");
+$hostname = php_uname("a");
 ?>
 <!DOCTYPE html>
 <html>
