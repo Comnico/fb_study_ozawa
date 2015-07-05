@@ -1,3 +1,6 @@
+<?php
+$hostname = php_uname("n");
+?>
 <!DOCTYPE html>
 <html>
 
@@ -10,11 +13,11 @@
 </head>
 
 <body>
-
     <div class="header">
         <div id="title">FB Study</div>
     </div>
     <div class="contents">
+            <?php print($hostname); ?>
         ソーシャルアカウントでログイン<br/>
         <div id="button"><a href="login.php">Facebookログイン</a></div>
     </div>
