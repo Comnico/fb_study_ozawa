@@ -25,7 +25,7 @@ define ('DATABASE_PASSWORD' , 'phppass'); // パスワード
 } elseif ( $hostname == 'Linux' ) {
 
 define ('DATABASE_NAME' , 'mysql:host=us-cdbr-iron-east-02.cleardb.net;dbname=heroku_9bfd6c1ee2da5df;charset=utf8'); //データベース名、アドレス
-define ('DATABASE_USERNAME' , 'ab51289b82d603b');   //　ユーザー名
+define ('DATABASE_USERNAME' , 'b51289b82d603b');   //　ユーザー名
 define ('DATABASE_PASSWORD' , '7439084d'); // パスワード
 
 }
