@@ -18,15 +18,28 @@ $hostname = php_uname("s");
 
 if ( $hostname == 'Darwin' ) {
 
-define ('DATABASE_NAME' , 'mysql:host=localhost;dbname=fb_study_ozawa;charset=utf8');
-define ('DATABASE_USERNAME' , 'phpusr');   //　ユーザー名
-define ('DATABASE_PASSWORD' , 'phppass'); // パスワード
+    define ('DATABASE_NAME' , 'mysql:host=localhost;dbname=fb_study_ozawa;charset=utf8');
+    define ('DATABASE_USERNAME' , 'phpusr');   //　ユーザー名
+    define ('DATABASE_PASSWORD' , 'phppass'); // パスワード
 
 } elseif ( $hostname == 'Linux' ) {
 
-define ('DATABASE_NAME' , 'mysql:host=us-cdbr-iron-east-02.cleardb.net;dbname=heroku_9bfd6c1ee2da5df;charset=utf8'); //データベース名、アドレス
-define ('DATABASE_USERNAME' , 'b51289b82d603b');   //　ユーザー名
-define ('DATABASE_PASSWORD' , '7439084d'); // パスワード
+    $url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+
+    $server = $url["host"];
+    $username = $url["user"];
+    $password = $url["pass"];
+    $db = substr($url["path"], 1);
+
+    print('$server : ' . $server . '<br>');
+    print('$username : ' . $username . '<br>');
+    print('$password : ' . $password . '<br>');
+    print('$db : ' . $db . '<br>');
+
+
+    define ('DATABASE_NAME' , 'mysql:host=us-cdbr-iron-east-02.cleardb.net;dbname=heroku_9bfd6c1ee2da5df;charset=utf8'); //データベース名、アドレス
+    define ('DATABASE_USERNAME' , 'b51289b82d603b');   //　ユーザー名
+    define ('DATABASE_PASSWORD' , '7439084d'); // パスワード
 
 }
 
