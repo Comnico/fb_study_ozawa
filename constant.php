@@ -11,9 +11,10 @@ const AFTER_LOGOUT_URL = 'http://fb-study-ozawa.herokuapp.com/login.php'; //ロ�
 
 /***************************************************
 *DB用の定数
-*ローカル環境のdbか、本番のdbになっているか、要確認。
+*開発環境と本番環境で、接続するdbをわけている
 ****************************************************/
 
+//hostのOSを確認。DarwinであればMac(開発環境)、Linuxであればheroku(本番環境)
 $hostname = php_uname("s");
 
 if ( $hostname == 'Darwin' ) {
@@ -24,18 +25,13 @@ if ( $hostname == 'Darwin' ) {
 
 } elseif ( $hostname == 'Linux' ) {
 
+    //定数"CLEARDB_DATABASE_URL"はherokuで定義された定数。接続先のclearDBのURLを定数化したもの。
     $url = parse_url(getenv("CLEARDB_DATABASE_URL"));
 
     $server = $url["host"];
     $username = $url["user"];
     $password = $url["pass"];
     $db = substr($url["path"], 1);
-
-    print('$server : ' . $server . '<br>');
-    print('$username : ' . $username . '<br>');
-    print('$password : ' . $password . '<br>');
-    print('$db : ' . $db . '<br>');
-
 
     define ('DATABASE_NAME' , "mysql:host=${server};dbname=${db};charset=utf8"); //データベース名、アドレス
     define ('DATABASE_USERNAME' , $username);   //　ユーザー名
