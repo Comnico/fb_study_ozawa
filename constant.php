@@ -14,9 +14,21 @@ const AFTER_LOGOUT_URL = 'http://fb-study-ozawa.herokuapp.com/login.php'; //ロ�
 *ローカル環境のdbか、本番のdbになっているか、要確認。
 ****************************************************/
 
+$hostname = php_uname("a");
+
+if ( $hostname == 'darwin' ) {
+
 const DATABASE_NAME = 'mysql:host=localhost;dbname=fb_study_ozawa;charset=utf8'; //データベース名、アドレス
 const DATABASE_USERNAME = 'phpusr';   //　ユーザー名
 const DATABASE_PASSWORD  = 'phppass'; // パスワード
+
+} elseif ( $hostname == 'Linux' ) {
+
+const DATABASE_NAME = 'mysql:host=us-cdbr-iron-east-02.cleardb.net;dbname=heroku_9bfd6c1ee2da5df;charset=utf8'; //データベース名、アドレス
+const DATABASE_USERNAME = 'ab51289b82d603b';   //　ユーザー名
+const DATABASE_PASSWORD  = '7439084d'; // パスワード
+
+}
 
 /***************************************************
 *FBアカウント
