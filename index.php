@@ -10,7 +10,7 @@
 
 <body>
     <div class="header">
-        <div id="title">FB Study</div>
+        <div id="title">FB Studyyyy</div>
     </div>
     <div class="contents">
         ソーシャルアカウントでログイン<br/>
