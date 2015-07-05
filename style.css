@@ -7,7 +7,7 @@
     a:visited {
         text-decoration: none;
     }
-    .h1 {
+    .header {
         position: fixed;
         /* 固定 */
         top: 0;
@@ -17,24 +17,25 @@
         background-color: #444444;
         padding: 5px;
     }
-    .h1 a {
+    .header a {
         color: #CCCCCC;
     }
-    .h1 a:visited {
+    .header a:visited {
         color: #CCCCCC;
     }
-    .h1 text {
+    #title {
         position: relative;
         left: 50px;
         color: #CCCCCC;
         font-size: x-large;
     }
-    .h1 text_logout {
-        position: relative;
+    #text_logout {
+        position: absolute;
+        top: 0;
+        right: 0;
         float: right;
-        color: #CCCCCC;
         font-size: large;
-        padding: 5px 50px;
+        padding: 10px 50px;
     }
     .contents {
         width: 700px;
@@ -45,11 +46,8 @@
         /* コンテンツ上下にスペース */
         text-align: center;
     }
-    .contents text {
-        margin: 10px;
-    }
 
-    .contents a {
+    #button {
         color: #FFFFFF;
         margin: 0 auto;
         width: 150px;
@@ -76,9 +74,13 @@
         word-wrap: break-word;
         /*文字をはみださない*/
     }
-    .post a {}
-    .footer {}
-    .footer text {
+    #icon{
+        position: relative;
+        left: 50px;
+
+    }
+
+    .footer {
         position: fixed;
         /* 固定 */
         bottom: 10px;

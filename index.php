@@ -7,24 +7,20 @@
         FB Study
     </title>
     <link rel="stylesheet" type="text/css" href="style.css">
-
-
 </head>
 
 <body>
 
-    <div class="h1">
-        <text>FB Study</text>
+    <div class="header">
+        <div id="title">FB Study</div>
     </div>
-
     <div class="contents">
-        <text>ソーシャルアカウントでログイン</text>
-        <br/>
-        <a href="login.php">Facebookログイン</a>
+        ソーシャルアカウントでログイン<br/>
+        <div id="button"><a href="login.php">Facebookログイン</a></div>
     </div>
 
     <div class="footer">
-        <text>&copy; 2015 comnico inc.</text>
+        &copy; 2015 comnico inc.
     </div>
 
 </body>
