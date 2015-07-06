@@ -42,73 +42,75 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
   *(elseは、ファイル末尾に記載)
   ****************************************/
 
- if ( isset( $session ) ) {
-
-
+if (isset($session)) {
 /*******************************************************************************************/
-
 
    /****************************************
    *以下、function
    ****************************************/
 
    //facebookとdbの差分を確認するfunction
-   function checkUpdate ($session, $page_id) {
+    function checkUpdate($session, $page_id)
+    {
 
-    //DBに接続
-    $db = new PDO (DATABASE_NAME,DATABASE_USERNAME,DATABASE_PASSWORD);
+        //DBに接続
+        $db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
 
-    //SQL文　db内の最新記事の日付の取得を指定
-    $sqlQuery = "SELECT post_date FROM fb_feed ORDER BY post_date DESC LIMIT 1";
-    $sqlStatement = $db->prepare ($sqlQuery);
+        //SQL文　db内の最新記事の日付の取得を指定
+        $sqlQuery = "SELECT post_date FROM fb_feed ORDER BY post_date DESC LIMIT 1";
+        $sqlStatement = $db->prepare($sqlQuery);
 
-    //実行
-    $latestDate = $sqlStatement->execute();
-
-
-    //db内の最新記事の日付以降のfeedは無いか、リクエストを送信
-    $feed_request = new FacebookRequest( $session, 'GET', "/${page_id}/feed?since=${latestDate}");
-    //Graph APIへ送信
-    $response = $feed_request->execute();
-    //Facebookから返ったきたデータを、配列に変換
-    $feed = $response->getGraphObject()->getProperty('data')->asArray();
-
-    //作りかけ。$latestDateの整形と、差分のチェックが未完了
+        //実行
+        $latestDate = $sqlStatement->execute();
 
 
+        //db内の最新記事の日付以降のfeedは無いか、リクエストを送信
+        $feed_request = new FacebookRequest($session, 'GET', "/${page_id}/feed?since=${latestDate}");
+        //Graph APIへ送信
+        $response = $feed_request->execute();
+        //Facebookから返ったきたデータを、配列に変換
+        $feed = $response->getGraphObject()->getProperty('data')->asArray();
 
-   }
+        //作りかけ。$latestDateの整形と、差分のチェックが未完了
+
+
+
+    }
 
    //facebookの情報を配列にして出力するfunction
-   function getFeedFromFacebook ($session, $page_id) {
+    function getFeedFromFacebook($session, $page_id)
+    {
 
-     //Graph APIへ送るセッション情報と、feed取得のための構文を指定。
-     $feed_request = new FacebookRequest( $session, 'GET', "/${page_id}/feed");
-     //Graph APIへ送信
-     $response = $feed_request->execute();
-     //Facebookから返ったきたデータを、配列に変換
-     $feed = $response->getGraphObject()->getProperty('data')->asArray();
-     //配列を出力
-     return $feed;
-   }
+       //Graph APIへ送るセッション情報と、feed取得のための構文を指定。
+        $feed_request = new FacebookRequest($session, 'GET', "/${page_id}/feed");
+         //Graph APIへ送信
+         $response = $feed_request->execute();
+         //Facebookから返ったきたデータを、配列に変換
+         $feed = $response->getGraphObject()->getProperty('data')->asArray();
+         //配列を出力
+         return $feed;
+    }
 
 
    //配列の内容をデータベースに書き込むfunction.
    //getFeedFromFacebookで取得した配列をMySQLへ書き込むために使う
-   function storageFeedToDb ($page_id, $array) {
+    function storageFeedToDb($page_id, $array)
 
-     //try,catchでPDOの例外を検知する
-    try {
-          //DBに接続
-          $db = new PDO (DATABASE_NAME,DATABASE_USERNAME,DATABASE_PASSWORD);
+    {
+        //try,catchでPDOの例外を検知する
+        try {
+            //DBに接続
+            $db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
 
-          //foreachで、連続してdbへ書き込む
-          foreach($array as $f){
+            //foreachで、連続してdbへ書き込む
+            foreach ($array as $f)
 
-          //SQLクエリをセット
-          $sqlQuery = "INSERT INTO fb_feed (page_id, editor_id, editor_name, post_id, post_date, post_message, image_url)
-           VALUES(:page_id, :editor_id, :editor_name, :post_id, :post_date, :post_message, :image_url)";
-          $sqlStatement = $db->prepare ($sqlQuery);
+            {
+
+              //SQLクエリをセット
+              $sqlQuery = "INSERT INTO fb_feed (page_id, editor_id, editor_name, post_id, post_date, post_message, image_url)
+               VALUES(:page_id, :editor_id, :editor_name, :post_id, :post_date, :post_message, :image_url)";
+                $sqlStatement = $db->prepare($sqlQuery);
 
           //以下、SQLクエリのプレースホルダに値を代入。
           //post_messageとimage_urlは、配列が無い場合はNULLとする
