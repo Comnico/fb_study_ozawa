@@ -7,7 +7,7 @@
     ****************************************/
 
 //定数を外部ファイルから読み込み
-require_once ('constant.php');
+require_once('constant.php');
 //composerのrequire
 require_once("vendor/autoload.php");
 
@@ -53,7 +53,29 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
    ****************************************/
 
    //facebookとdbの差分を確認するfunction
-   function checkUpdate () {
+   function checkUpdate ($session, $page_id) {
+
+    //DBに接続
+    $db = new PDO (DATABASE_NAME,DATABASE_USERNAME,DATABASE_PASSWORD);
+
+    //SQL文　db内の最新記事の日付の取得を指定
+    $sqlQuery = "SELECT post_date FROM fb_feed ORDER BY post_date DESC LIMIT 1";
+    $sqlStatement = $db->prepare ($sqlQuery);
+
+    //実行
+    $latestDate = $sqlStatement->execute();
+
+
+    //db内の最新記事の日付以降のfeedは無いか、リクエストを送信
+    $feed_request = new FacebookRequest( $session, 'GET', "/${page_id}/feed?since=${latestDate}");
+    //Graph APIへ送信
+    $response = $feed_request->execute();
+    //Facebookから返ったきたデータを、配列に変換
+    $feed = $response->getGraphObject()->getProperty('data')->asArray();
+
+    //作りかけ。$latestDateの整形と、差分のチェックが未完了
+
+
 
    }
 
@@ -61,13 +83,13 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
    function getFeedFromFacebook ($session, $page_id) {
 
      //Graph APIへ送るセッション情報と、feed取得のための構文を指定。
-     $deed_request = new FacebookRequest( $session, 'GET', "/${page_id}/feed");
+     $feed_request = new FacebookRequest( $session, 'GET', "/${page_id}/feed");
      //Graph APIへ送信
-     $response = $deed_request->execute();
+     $response = $feed_request->execute();
      //Facebookから返ったきたデータを、配列に変換
-     $deed = $response->getGraphObject()->getProperty('data')->asArray();
+     $feed = $response->getGraphObject()->getProperty('data')->asArray();
      //配列を出力
-     return $deed;
+     return $feed;
    }
 
 
@@ -80,8 +102,8 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
           //DBに接続
           $db = new PDO (DATABASE_NAME,DATABASE_USERNAME,DATABASE_PASSWORD);
 
-          //foreachで連続して書き込む
-          foreach($array as $d){
+          //foreachで、連続してdbへ書き込む
+          foreach($array as $f){
 
           //SQLクエリをセット
           $sqlQuery = "INSERT INTO fb_feed (page_id, editor_id, editor_name, post_id, post_date, post_message, image_url)
@@ -91,16 +113,16 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
           //以下、SQLクエリのプレースホルダに値を代入。
           //post_messageとimage_urlは、配列が無い場合はNULLとする
           $sqlStatement->bindValue (':page_id',$page_id);
-          $sqlStatement->bindValue (':editor_id',$d->from->id);
-          $sqlStatement->bindValue (':editor_name',$d->from->name);
-          $sqlStatement->bindValue (':post_id',$d->id);
-          $sqlStatement->bindValue (':post_date',$d->updated_time);
-           if (isset ($d->message)) {
-          $sqlStatement->bindValue (':post_message',$d->message);
+          $sqlStatement->bindValue (':editor_id',$f->from->id);
+          $sqlStatement->bindValue (':editor_name',$f->from->name);
+          $sqlStatement->bindValue (':post_id',$f->id);
+          $sqlStatement->bindValue (':post_date',$f->updated_time);
+           if (isset ($f->message)) {
+          $sqlStatement->bindValue (':post_message',$f->message);
           } else {$sqlStatement->bindValue (':post_message', NULL, PDO::PARAM_NULL);
           }
-          if (isset ($d->picture)) {
-          $sqlStatement->bindValue (':image_url',$d->picture);
+          if (isset ($f->picture)) {
+          $sqlStatement->bindValue (':image_url',$f->picture);
           } else { $sqlStatement->bindValue (':image_url', NULL, PDO::PARAM_NULL);
           }
 
@@ -153,6 +175,7 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
    }
    }
 
+
    //iconを取得するfunction
    function getIcon($session, $editor_id){
 
@@ -172,8 +195,8 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
     *fbからフィードの情報を取得し、dbに書き込む
     ****************************************/
 
-   $deed = getFeedFromFacebook($session, $page_id);
-   storageFeedToDb($page_id, $deed);
+   $feed = getFeedFromFacebook($session, $page_id);
+   storageFeedToDb($page_id, $feed);
 
 
 /*******************************************************************************************/
@@ -248,7 +271,7 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
 // セッションデータを持っていない場合は、トップページにリダイレクト
 
 
- }else{
+ } else {
    header('location: index.php');
    exit();
  }
