@@ -71,6 +71,7 @@ if (isset($session)) {
 
     //セッション情報と、ログアウトURLをmain.phpに渡す
     $_SESSION['session'] = $session;
+    $_SESSION['user_id'] = $user_id;
     $_SESSION['logout_url'] = $helper->getLogoutUrl($session, AFTER_LOGOUT_URL);
 
     //main.phpへリダイレクト

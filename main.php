@@ -26,10 +26,8 @@ use Facebook\GraphSessionInfo;
 //$_SESSIONの変数を入れ替える
 session_start();
 $session = $_SESSION['session'];
+$user_id = $_SESSION['user_id'];
 $logout_url = $_SESSION['logout_url'];
-
-//取得するページを指定
-$page_id = NIKU;
 
 //FacebookSessionの呼び出し
 FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
@@ -47,7 +45,7 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
 if (isset($session)) {
 
     //dbから、ページに表示用のデータを取得
-    $data = getDataFromDb();
+    $data = getDataFromDb($user_id);
 
 //以下、html
 

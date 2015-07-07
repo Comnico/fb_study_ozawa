@@ -159,7 +159,7 @@ use Facebook\GraphSessionInfo;
 
        //dbからのDataを取得し、連想配列にして出力
        //取得件数は新規日付20件
-        function getDataFromDb()
+        function getDataFromDb($page_id)
         {
 
           //try,catchでPDOの例外を検知する
@@ -168,8 +168,11 @@ use Facebook\GraphSessionInfo;
                 $db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
 
                 //SQLクエリをセット
-                $sqlQuery = "SELECT id, page_id, editor_id, editor_name, post_id, post_date, post_message, image_url FROM fb_feed ORDER BY post_date DESC LIMIT 20";
+                $sqlQuery = "SELECT id, page_id, editor_id, editor_name, post_id, post_date, post_message, image_url
+                            FROM fb_feed WHERE page_id = :page_id ORDER BY post_date DESC LIMIT 20";
                 $sqlStatement = $db->prepare($sqlQuery);
+
+                $sqlStatement->bindValue(':page_id', $page_id);
 
                 //実行
                 $sqlStatement->execute();
