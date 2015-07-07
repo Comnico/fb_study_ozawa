@@ -50,8 +50,8 @@ if (isset($session)) {
     //ユーザーIDとトークンを入手
     $access_token = $session->getToken();
 
-    $sessioninfo = $session->getSessionInfo()->asArray();
-    $user_id = $sessioninfo['user_id'];
+    $session_info = $session->getSessionInfo()->asArray();
+    $user_id = $session_info['user_id'];
 
     //新規ユーザーか既存ユーザーか確認。新規の場合は、DBへの保存と、
     //FBからフィードをプッシュでとってくる

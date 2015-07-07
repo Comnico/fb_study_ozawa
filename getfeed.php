@@ -39,14 +39,11 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
         $session = new FacebookSession($u['access_token']);
         $user_id = $u['user_id'];
 
-        // print('<pre>');
-        // var_dump(checkUpdate($session, $user_id));
-        // print('</pre>');
-
-        // //指定したユーザーIDのページを取得する
+        //指定したユーザーIDのページを取得する
         $feed = getFeedFromFacebook($session, $user_id);
-        //DBへ保存
+        //フィードをDBへ保存
         storageFeedToDb($user_id, $feed);
         }
+
     print('done.');
 ?>

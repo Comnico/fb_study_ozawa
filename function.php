@@ -59,10 +59,6 @@ use Facebook\GraphSessionInfo;
 
     }
 
-    //初回接続時にプッシュで情報を取得するfunction
-    function pushGet() {
-        //作りかけ
-    }
 
     //初回接続してきたユーザーのuser_idとaccesstokenをDBに記録するfunction
     function storageToken($user_id, $access_token)
