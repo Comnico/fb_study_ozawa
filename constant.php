@@ -7,7 +7,7 @@
 
 const APP_ID = '452878368210796'; //FacebookAppのID
 const APP_SECRET = 'f0e25cc2d8ce6f0a8e2e80bf35c64081'; //FacebookAppのSecret
-const REDIRECT_URL = 'http://fb-study-ozawa.herokuapp.com/login2.php'; //セッション情報取得後にリダイレクトするURL
+const REDIRECT_URL = 'http://fb-study-ozawa.herokuapp.com/login.php'; //セッション情報取得後にリダイレクトするURL
 const AFTER_LOGOUT_URL = 'http://fb-study-ozawa.herokuapp.com/index.php'; //ログアウトした「後」に、リダイレクトするURL
 
 /***************************************************
