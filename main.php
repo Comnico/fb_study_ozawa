@@ -95,7 +95,6 @@ if (isset($session)) {
    //配列の内容をデータベースに書き込むfunction.
    //getFeedFromFacebookで取得した配列をMySQLへ書き込むために使う
     function storageFeedToDb($page_id, $array)
-
     {
         //try,catchでPDOの例外を検知する
         try {
@@ -103,93 +102,93 @@ if (isset($session)) {
             $db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
 
             //foreachで、連続してdbへ書き込む
-            foreach ($array as $f)
-
-            {
-
-              //SQLクエリをセット
-              $sqlQuery = "INSERT INTO fb_feed (page_id, editor_id, editor_name, post_id, post_date, post_message, image_url)
+            foreach ($array as $f) {
+                //SQLクエリをセット
+                $sqlQuery = "INSERT INTO fb_feed (page_id, editor_id, editor_name, post_id, post_date, post_message, image_url)
                VALUES(:page_id, :editor_id, :editor_name, :post_id, :post_date, :post_message, :image_url)";
                 $sqlStatement = $db->prepare($sqlQuery);
 
-          //以下、SQLクエリのプレースホルダに値を代入。
-          //post_messageとimage_urlは、配列が無い場合はNULLとする
-          $sqlStatement->bindValue (':page_id',$page_id);
-          $sqlStatement->bindValue (':editor_id',$f->from->id);
-          $sqlStatement->bindValue (':editor_name',$f->from->name);
-          $sqlStatement->bindValue (':post_id',$f->id);
-          $sqlStatement->bindValue (':post_date',$f->updated_time);
-           if (isset ($f->message)) {
-          $sqlStatement->bindValue (':post_message',$f->message);
-          } else {$sqlStatement->bindValue (':post_message', NULL, PDO::PARAM_NULL);
-          }
-          if (isset ($f->picture)) {
-          $sqlStatement->bindValue (':image_url',$f->picture);
-          } else { $sqlStatement->bindValue (':image_url', NULL, PDO::PARAM_NULL);
-          }
+                    //以下、SQLクエリのプレースホルダに値を代入。
+                    //post_messageとimage_urlは、配列が無い場合はNULLとする
+                  $sqlStatement->bindValue(':page_id', $page_id);
+                  $sqlStatement->bindValue(':editor_id', $f->from->id);
+                  $sqlStatement->bindValue(':editor_name', $f->from->name);
+                  $sqlStatement->bindValue(':post_id', $f->id);
+                  $sqlStatement->bindValue(':post_date', $f->updated_time);
+                if (isset($f->message)) {
+                    $sqlStatement->bindValue(':post_message', $f->message);
+                } else {
+                    $sqlStatement->bindValue(':post_message', null, PDO::PARAM_NULL);
+                }
+                if (isset($f->picture)) {
+                    $sqlStatement->bindValue(':image_url', $f->picture);
+                } else {
+                    $sqlStatement->bindValue(':image_url', null, PDO::PARAM_NULL);
+                }
 
-          //実行
-          $sqlStatement->execute();
+                //実行
+                $sqlStatement->execute();
 
+
+            }
+          //DB切断
+            $db = null;
 
         }
-          //DB切断
-          $db = NULL;
-      }
-
-      //例外処理
-      catch(PDOException $e){
-      die('storageFeedToDbに不具合があります。' .$e->getMessage());
-      }
+        //例外処理
+        catch (PDOException $e) {
+            die('storageFeedToDbに不具合があります。' .$e->getMessage());
+        }
     }
 
 
 
    //dbからのDataを取得し、連想配列にして出力
    //取得件数は新規日付20件
-   function getDataFromDb(){
+    function getDataFromDb()
+    {
 
-  //try,catchでPDOの例外を検知する
-   try {
+      //try,catchでPDOの例外を検知する
+        try {
+            //DBに接続
+            $db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
 
-   //DBに接続
-   $db = new PDO (DATABASE_NAME,DATABASE_USERNAME,DATABASE_PASSWORD);
+            //SQLクエリをセット
+            $sqlQuery = "SELECT id, page_id, editor_id, editor_name, post_id, post_date, post_message, image_url FROM fb_feed ORDER BY post_date DESC LIMIT 20";
+            $sqlStatement = $db->prepare($sqlQuery);
 
-   //SQLクエリをセット
-   $sqlQuery = "SELECT id, page_id, editor_id, editor_name, post_id, post_date, post_message, image_url FROM fb_feed ORDER BY post_date DESC LIMIT 20";
-   $sqlStatement = $db->prepare ($sqlQuery);
+            //実行
+            $sqlStatement->execute();
 
-   //実行
-   $sqlStatement->execute();
+            //SQLから取得したデータを配列に変換
+            $data = $sqlStatement->fetchall(PDO::FETCH_ASSOC);
 
-   //SQLから取得したデータを配列に変換
-   $data = $sqlStatement->fetchall(PDO::FETCH_ASSOC);
+            //出力
+            return $data;
 
-   //出力
-   return $data;
+            //DB切断
+            $db = null;
 
-   //DB切断
-   $db = NULL;
-
-   //PDOでエラーが発生した場合の例外処理
-   }catch(PDOException $e){
-   die('エラーが発生しました。' .$e->getMessage());
-   }
-   }
+            //PDOでエラーが発生した場合の例外処理
+        } catch (PDOException $e) {
+            die('エラーが発生しました。' .$e->getMessage());
+        }
+    }
 
 
    //iconを取得するfunction
-   function getIcon($session, $editor_id){
+    function getIcon($session, $editor_id)
+    {
 
-     //Graph APIへ送るセッション情報と、feed取得のための構文を指定。
-     $icon_request = new FacebookRequest( $session, 'GET', "/${editor_id}/picture?redirect=false");
-     //Graph APIへ送信
-     $icon_obj = $icon_request->execute();
-     //Facebookから返ったきたデータを、配列に変換
-     $icon_url = $icon_obj->getGraphObject()->asArray();
-     //配列を出力
-     return $icon_url['url'];
-   }
+         //Graph APIへ送るセッション情報と、feed取得のための構文を指定。
+         $icon_request = new FacebookRequest($session, 'GET', "/${editor_id}/picture?redirect=false");
+         //Graph APIへ送信
+         $icon_obj = $icon_request->execute();
+         //Facebookから返ったきたデータを、配列に変換
+         $icon_url = $icon_obj->getGraphObject()->asArray();
+         //配列を出力
+         return $icon_url['url'];
+    }
 
 /*******************************************************************************************/
 
@@ -197,8 +196,8 @@ if (isset($session)) {
     *fbからフィードの情報を取得し、dbに書き込む
     ****************************************/
 
-   $feed = getFeedFromFacebook($session, $page_id);
-   storageFeedToDb($page_id, $feed);
+    $feed = getFeedFromFacebook($session, $page_id);
+    storageFeedToDb($page_id, $feed);
 
 
 /*******************************************************************************************/
@@ -231,7 +230,7 @@ if (isset($session)) {
 <div class="main">
 <div class="contents">
 
-  <?php
+    <?php
 
  //foreachで展開。post_messageとimage_urlがnullの場合は、出力しないようにする
 
@@ -245,15 +244,21 @@ if (isset($session)) {
 
   <a href="http://www.facebook.com/<?php print($d['editor_id']); ?> "><?php print($d['editor_name']);?></a>
   <a href="http://www.facebook.com/<?php print($d['post_id']); ?> "><?php print($d['post_date']);?></a>
-  <?php if(isset ($d['post_message'] )) { print($d['post_message']); } ?>
-  <?php if(isset ($d['image_url'] )) { print('<img src="' . $d['image_url'] . '">'); } ?>
-  <?php print('</div>'); ?>
+                        <?php if (isset($d['post_message'])) {
+                            print($d['post_message']);
+                        }
+                        ?>
+                <?php if (isset($d['image_url'])) {
+                    print('<img src="' . $d['image_url'] . '">');
+                    }
+                    ?>
+                <?php print('</div>'); ?>
 
 
-   <?php
+<?php
 
- }
- $count = NULL;
+    }
+    $count = null;
 ?>
 
 
@@ -273,7 +278,7 @@ if (isset($session)) {
 // セッションデータを持っていない場合は、トップページにリダイレクト
 
 
- } else {
-   header('location: index.php');
-   exit();
- }
+} else {
+        header('location: index.php');
+        exit();
+}

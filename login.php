@@ -7,7 +7,7 @@
     ****************************************/
 
 //定数を外部ファイルから読み込み
-require_once ('constant.php');
+require_once('constant.php');
 //composerのrequire
 require_once("vendor/autoload.php");
 
@@ -32,34 +32,31 @@ $helper = new FacebookRedirectLoginHelper(REDIRECT_URL);
 
 //セッション情報を取得
 try {
- $session = $helper->getSessionFromRedirect();
+    $session = $helper->getSessionFromRedirect();
 
  // Facebookがエラーを返した場合に、例外をcatchする
-} catch( Exception $ex ) {
- die($ex->getMessage);
+} catch (Exception $ex) {
+    die($ex->getMessage);
 }
 
 //セッションを保持している場合は、main.phpに飛ぶ。それ以外は、facebookへリクエストを送る
-if ( isset( $session ) ) {
-
+if (isset($session)) {
 //セッション情報と、ログアウトURLをmain.phpに渡す
-$_SESSION['session'] = $session;
-$_SESSION['logout_url'] = $helper->getLogoutUrl($session, AFTER_LOGOUT_URL);
+    $_SESSION['session'] = $session;
+    $_SESSION['logout_url'] = $helper->getLogoutUrl($session, AFTER_LOGOUT_URL);
 
-//main.phpへリダイレクト
-header('location: main.php');
-exit();
+    //main.phpへリダイレクト
+    header('location: main.php');
+    exit();
 
 
-//以下、セッション情報を持っていない場合
+    //以 下、セッション情報を持っていない場合
 } else {
+    //permissionを追加したい場合は、$scopeに追記する。
+    $scope = array('user_posts');
+    $login_url = $helper->getLoginUrl($scope);
 
-
-//permissionを追加したい場合は、$scopeに追記する。
-$scope = array('user_posts');
-$login_url = $helper->getLoginUrl($scope);
-
-//リダイレクト
-header("location: ${login_url}");
-exit();
+    //リダイレクト
+    header("location: ${login_url}");
+    exit();
 }
