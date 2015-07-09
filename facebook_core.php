@@ -31,9 +31,10 @@ class FacebookCore
     private $session;
     private $page_id;
 
-    public function __construct ($session = null, $page_id = null) {
-    $this->session = $session;
-    $this->page_id = $page_id;
+    public function __construct($session = null, $page_id = null)
+    {
+        $this->session = $session;
+        $this->page_id = $page_id;
     }
 
 
@@ -44,27 +45,37 @@ class FacebookCore
         return $result;
     }
 
+    private function getData($query)
+    {
+        //Graph APIへ送るセッション情報と、データ取得のための構文を指定。
+        $data_request = new FacebookRequest($this->session, 'GET', $query);
+         //Graph APIへ送信
+         $response = $data_request->execute();
+         //Facebookから返ったきたデータを、配列に変換
+         $data = $response->getGraphObject()->asArray();
+
+         //取得したデータを、配列として出力
+         return $data;
+    }
 
    //facebookの情報を配列にして出力するfunction
     public function getFeed()
     {
-        //Graph APIへ送るセッション情報と、feed取得のための構文を指定。
-        $feed_request = new FacebookRequest($this->session, 'GET', "/{$this->page_id}/feed");
-         //Graph APIへ送信
-         $response = $feed_request->execute();
-         //Facebookから返ったきたデータを、配列に変換
-         $feed = $response->getGraphObject()->getProperty('data')->asArray();
-         //配列を出力
-         return $feed;
+        //クエリ文をセット
+        $query = "/{$this->page_id}/feed";
+        //フィードを配列として取得
+        $feed = $this->getData($query);
+        //フィードを出力
+         return $feed['data'];
     }
 
 
 
    //iconを取得するfunction
-    function getIcon($editor_id)
+    public function getIcon($editor_id)
     {
          //Graph APIへ送るセッション情報と、feed取得のための構文を指定。
-         $icon_request = new FacebookRequest($this->$session, 'GET', "/${editor_id}/picture?redirect=false");
+         $icon_request = new FacebookRequest($this->session, 'GET', "");
          //Graph APIへ送信
          $icon_obj = $icon_request->execute();
          //Facebookから返ったきたデータを、配列に変換
@@ -75,5 +86,6 @@ class FacebookCore
 
 
 
+    $query = '/{$this->page_id}/feed  ,   /${editor_id}/picture?redirect=false '
 
 }

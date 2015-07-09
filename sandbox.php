@@ -26,9 +26,19 @@ const ID = '853981858011604';
 
 $session = FacebookCore::getSession(AT);
 $fb = new FacebookCore($session, ID);
+$res = $fb->getFeed();
+$yes = $fb->getIcon(ID);
+$result = $res[0];
+
+
+
 print('<pre>');
-var_dump($fb->getFeed());
+var_dump($yes);
+var_dump($result->id);
 print('</pre>');
+
+
+
 
 
  ?>
