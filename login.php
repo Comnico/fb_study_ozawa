@@ -47,9 +47,9 @@ if (isset($session)) {
 
     //ログインしたユーザーのFBユーザーIDとアクセストークンをDBに保管する
 
-    //ユーザーIDとトークンを入手
+    //トークンを入手
     $access_token = $session->getToken();
-
+    //ユーザーID入手
     $session_info = $session->getSessionInfo()->asArray();
     $user_id = $session_info['user_id'];
 

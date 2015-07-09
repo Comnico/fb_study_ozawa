@@ -12,6 +12,8 @@ require_once('constant.php');
 require_once("vendor/autoload.php");
 //functionのrequire
 require_once('function.php');
+//facebookクラスのrequire
+require_once('facebook_core.php');
 
 //FacebookSDKの中から、使用するものを選択
 use Facebook\FacebookSession;
@@ -36,7 +38,7 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
     foreach($user_data as $u){
 
         //アクセストークンを利用してセッションを開始する
-        $session = new FacebookSession($u['access_token']);
+        $session = FacebookCore::getSession($u['access_token']);
         $user_id = $u['user_id'];
 
         //指定したユーザーIDのページを取得する

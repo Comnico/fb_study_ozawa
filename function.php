@@ -201,35 +201,5 @@ use Facebook\GraphSessionInfo;
         ****************************************/
 
 
-   //facebookの情報を配列にして出力するfunction
-    function getFeedFromFacebook($session, $page_id)
-    {
-
-       //Graph APIへ送るセッション情報と、feed取得のための構文を指定。
-        $feed_request = new FacebookRequest($session, 'GET', "/${page_id}/feed");
-         //Graph APIへ送信
-         $response = $feed_request->execute();
-         //Facebookから返ったきたデータを、配列に変換
-         $feed = $response->getGraphObject()->getProperty('data')->asArray();
-         //配列を出力
-         return $feed;
-    }
-
-
-
-   //iconを取得するfunction
-    function getIcon($session, $editor_id)
-    {
-
-         //Graph APIへ送るセッション情報と、feed取得のための構文を指定。
-         $icon_request = new FacebookRequest($session, 'GET', "/${editor_id}/picture?redirect=false");
-         //Graph APIへ送信
-         $icon_obj = $icon_request->execute();
-         //Facebookから返ったきたデータを、配列に変換
-         $icon_url = $icon_obj->getGraphObject()->asArray();
-         //配列を出力
-         return $icon_url['url'];
-    }
-
 
 ?>
