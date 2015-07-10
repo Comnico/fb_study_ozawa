@@ -28,9 +28,11 @@ use Facebook\GraphSessionInfo;
 class FacebookCore
 {
 
+    //プロパティ
     private $session;
     private $page_id;
 
+    //コンストラクタ
     public function __construct($session = null, $page_id = null)
     {
         $this->session = $session;
@@ -45,18 +47,20 @@ class FacebookCore
         return $result;
     }
 
+
     private function getData($query)
     {
         //Graph APIへ送るセッション情報と、データ取得のための構文を指定。
         $data_request = new FacebookRequest($this->session, 'GET', $query);
-         //Graph APIへ送信
-         $response = $data_request->execute();
-         //Facebookから返ったきたデータを、配列に変換
-         $data = $response->getGraphObject()->asArray();
+        //Graph APIへ送信
+        $response = $data_request->execute();
+        //Facebookから返ったきたデータを、配列に変換
+        $data = $response->getGraphObject()->asArray();
 
-         //取得したデータを、配列として出力
-         return $data;
+        //取得したデータを、配列として出力
+        return $data;
     }
+
 
    //facebookの情報を配列にして出力するfunction
     public function getFeed()
@@ -66,26 +70,19 @@ class FacebookCore
         //フィードを配列として取得
         $feed = $this->getData($query);
         //フィードを出力
-         return $feed['data'];
+        return $feed['data'];
     }
 
 
-
-   //iconを取得するfunction
+   //iconのURLを出力するfunction
     public function getIcon($editor_id)
     {
-         //Graph APIへ送るセッション情報と、feed取得のための構文を指定。
-         $icon_request = new FacebookRequest($this->session, 'GET', "");
-         //Graph APIへ送信
-         $icon_obj = $icon_request->execute();
-         //Facebookから返ったきたデータを、配列に変換
-         $icon_url = $icon_obj->getGraphObject()->asArray();
-         //配列を出力
-         return $icon_url['url'];
+        //iconを取得するクエリ文をセット
+        $query = "/${editor_id}/picture?redirect=false";
+        //URLを配列として取得
+        $url = $this->getData($query);
+        //URLを出力
+        return $url['url'];
     }
-
-
-
-    $query = '/{$this->page_id}/feed  ,   /${editor_id}/picture?redirect=false '
 
 }

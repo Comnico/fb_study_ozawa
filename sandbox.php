@@ -36,9 +36,3 @@ print('<pre>');
 var_dump($yes);
 var_dump($result->id);
 print('</pre>');
-
-
-
-
-
- ?>

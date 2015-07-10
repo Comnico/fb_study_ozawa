@@ -42,7 +42,8 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
         $user_id = $u['user_id'];
 
         //指定したユーザーIDのページを取得する
-        $feed = getFeedFromFacebook($session, $user_id);
+        $fb = new FacebookCore($session, $user_id);
+        $feed = $fb->getFeed();
         //フィードをDBへ保存
         storageFeedToDb($user_id, $feed);
         }
