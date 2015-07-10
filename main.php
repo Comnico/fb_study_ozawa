@@ -96,7 +96,6 @@ if (isset($session)) {
 <?php
 
     }
-    $count = null;
 ?>
 
 

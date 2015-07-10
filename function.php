@@ -81,9 +81,31 @@ use Facebook\GraphSessionInfo;
         }
     }
 
+    function updateToken($user_id, $access_token)
+    {
+
+        $db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
+
+        try {
+            //SQL文　db内の最新記事の日付の取得を指定
+            $sqlQuery = "INSERT INTO fb_token (user_id, access_token) VALUES(:user_id, :access_token)";
+            $sqlStatement = $db->prepare($sqlQuery);
+
+            $sqlStatement->bindValue(':user_id', $user_id);
+            $sqlStatement->bindValue(':access_token', $access_token);
+
+            //実行
+            $sqlStatement->execute();
+
+        } catch (PDOException $e) {
+                die('storageTokenに不具合があります。' .$e->getMessage());
+        }
+
+    }
+
 
     //全ての登録ユーザーのIDとアクセストークンを配列にして出力するfunction
-    function userDumpFromDB() {
+    function userDump() {
     $db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
 
     try {
@@ -101,7 +123,7 @@ use Facebook\GraphSessionInfo;
         return $result;
 
         } catch (PDOException $e) {
-            die('userDumpFromDBに不具合があります。' .$e->getMessage());
+            die('userDumpに不具合があります。' .$e->getMessage());
         }
 
     }

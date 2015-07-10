@@ -10,10 +10,10 @@
 require_once('constant.php');
 //composerのrequire
 require_once("vendor/autoload.php");
-//functionのrequire
-require_once('function.php');
 //facebookクラスのrequire
 require_once('facebook_core.php');
+//dbCoreクラスのrequire
+require_once('dbcore.php');
 
 //FacebookSDKの中から、使用するものを選択
 use Facebook\FacebookSession;
@@ -31,7 +31,7 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
 
 
     //全てのユーザーIDを出力
-    $user_data = userDumpFromDB();
+    $user_data = DbCore::userDump();
 
     //foreachで、出力した全てのユーザーごとに、
     //FeedをFacebookから取得し、DBへ書き込みを行う

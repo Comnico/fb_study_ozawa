@@ -36,12 +36,16 @@ class DbCore
 
     private $db;
 
-    public function __construct(){
-
-    $this->db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
-
+    public function __construct()
+    {
+        $this->db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
     }
 
+    private static function dbSet()
+    {
+        $result = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
+        return $result;
+    }
 
     //新規登録か既存登録か確認するfunction
     //新規の場合は文字列'new'を、既存の場合は文字列'exist'を返す
@@ -67,10 +71,11 @@ class DbCore
             return $result;
 
             } catch (PDOException $e) {
-                die('storageTokenに不具合があります。' .$e->getMessage());
+                   die('storageTokenに不具合があります。' .$e->getMessage());
             }
 
     }
+
 
 
     //初回接続してきたユーザーのuser_idとaccesstokenをDBに記録するfunction
@@ -93,35 +98,65 @@ class DbCore
         }
     }
 
+    public function updateToken($user_id, $access_token)
+    {
 
-    //全ての登録ユーザーのIDとアクセストークンを配列にして出力するfunction
-    public function userDumpFromDB() {
+        $db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
 
-    try {
-        //SQL文　ユーザーIDとアクセストークンを全て出力する
-        $sqlQuery = "SELECT user_id, access_token FROM fb_token";
-        $sqlStatement = $this->db->prepare($sqlQuery);
+        try {
+            //SQL文　db内の最新記事の日付の取得を指定
+            $sqlQuery = "INSERT INTO fb_token (user_id, access_token) VALUES(:user_id, :access_token)";
+            $sqlStatement = $db->prepare($sqlQuery);
 
-        //実行
-        $sqlStatement->execute();
+            $sqlStatement->bindValue(':user_id', $user_id);
+            $sqlStatement->bindValue(':access_token', $access_token);
 
-        //DBから取得した値を取り出す
-        $result = $sqlStatement->fetchall(PDO::FETCH_ASSOC);
-
-        //結果を出力
-        return $result;
+            //実行
+            $sqlStatement->execute();
 
         } catch (PDOException $e) {
-            die('userDumpFromDBに不具合があります。' .$e->getMessage());
+                die('storageTokenに不具合があります。' .$e->getMessage());
+        }
+
+    }
+
+    private function makeQuery()
+    {
+        
+    }
+
+    //全ての登録ユーザーのIDとアクセストークンを配列にして出力するfunction
+    public static function userDump()
+    {
+                $db = self::dbSet();
+                //$sQ - self::makeQuery();
+        try {
+            //SQL文　ユーザーIDとアクセストークンを全て出力する
+            $sqlQuery = "SELECT user_id, access_token FROM fb_token";
+            $sqlStatement = $db->prepare($sqlQuery);
+
+            //実行
+            $sqlStatement->execute();
+
+            //DBから取得した値を取り出す
+            $result = $sqlStatement->fetchall(PDO::FETCH_ASSOC);
+
+            //結果を出力
+            return $result;
+
+        } catch (PDOException $e) {
+            die('userDumpに不具合があります。' .$e->getMessage());
         }
 
     }
 
 
    //配列の内容をデータベースに書き込むfunction.
-   //getFeedFromFacebookで取得した配列をMySQLへ書き込むために使う
-    function storageFeedToDb($page_id, $array)
+   //FacebookCore->getFeed();で取得した配列をMySQLへ書き込むために使う
+    public static function storageFeedToDb($page_id, $array)
     {
+        $db = self::dbSet();
+
         //try,catchでPDOの例外を検知する
         try {
 
@@ -130,7 +165,7 @@ class DbCore
                 //SQLクエリをセット
                 $sqlQuery = "INSERT IGNORE INTO fb_feed (page_id, editor_id, editor_name, post_id, post_date, post_message, image_url)
                VALUES(:page_id, :editor_id, :editor_name, :post_id, :post_date, :post_message, :image_url)";
-                $sqlStatement = $this->db->prepare($sqlQuery);
+                $sqlStatement = $db->prepare($sqlQuery);
 
                     //以下、SQLクエリのプレースホルダに値を代入。
                     //post_messageとimage_urlは、配列が無い場合はNULLとする

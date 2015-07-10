@@ -84,5 +84,4 @@ class FacebookCore
         //URLを出力
         return $url['url'];
     }
-
 }

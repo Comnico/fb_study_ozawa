@@ -66,7 +66,7 @@ if (isset($session)) {
         storageFeedToDb($user_id, $feed);
 
     } else {
-
+        updateToken($user_id, $access_token);
     }
 
     //セッション情報と、ログアウトURLをmain.phpに渡す
