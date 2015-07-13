@@ -10,8 +10,10 @@
 require_once('constant.php');
 //composerのrequire
 require_once("vendor/autoload.php");
-//functionのrequire
-require_once('function.php');
+//facebookクラスのrequire
+require_once('facebook_core.php');
+//dbCoreクラスのrequire
+require_once('dbcore.php');
 
 //FacebookSDKの中から、使用するものを選択
 use Facebook\FacebookSession;
@@ -55,18 +57,19 @@ if (isset($session)) {
 
     //新規ユーザーか既存ユーザーか確認。新規の場合は、DBへの保存と、
     //FBからフィードをプッシュでとってくる
-
-
-    if (checkNewOrNot($user_id) == 'new') {
+    if (DbCore::checkNewOrNot($user_id) == 'new') {
 
         //IDとトークンの保存
-        storageToken($user_id, $access_token);
+        DbCore::storageToken($user_id, $access_token);
+
         //Feedの取得と、DBへ保存
-        $feed = getFeedFromFacebook($session, $user_id);
-        storageFeedToDb($user_id, $feed);
+        //指定したユーザーIDのページを取得する
+        $fb = new FacebookCore($session);
+        $feed = $fb->getFeed($user_id);
+        DbCore::storageFeed($user_id, $feed);
 
     } else {
-        updateToken($user_id, $access_token);
+        DbCore::updateToken($user_id, $access_token);
     }
 
     //セッション情報と、ログアウトURLをmain.phpに渡す

@@ -35,8 +35,8 @@ class DbCore
 {
 
     private $db;
+    private $data;
 
-    //コンストラクタ。DBの情報をセットする
     public function __construct()
     {
         $this->db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
@@ -51,14 +51,14 @@ class DbCore
 
     //新規登録か既存登録か確認するfunction
     //新規の場合は文字列'new'を、既存の場合は文字列'exist'を返す
-    public function checkNewOrNot($user_id)
+    public static function checkNewOrNot($user_id)
     {
-
+    $db = self::dbSet();
         try {
             //SQL文　指定のユーザーIDが登録されているか確認する
             //無ければ0を、あれば1を返す
             $sqlQuery = "SELECT COUNT(user_id) FROM fb_token WHERE user_id = :user_id";
-            $sqlStatement = $this->db->prepare($sqlQuery);
+            $sqlStatement = $db->prepare($sqlQuery);
             $sqlStatement->bindValue(':user_id', $user_id);
             $sqlStatement->execute();
 
@@ -69,7 +69,7 @@ class DbCore
             return $result;
 
             } catch (PDOException $e) {
-                   die('storageTokenに不具合があります。' .$e->getMessage());
+                die('checkNewOrNotに不具合があります。' .$e->getMessage());
             }
 
     }
@@ -77,12 +77,13 @@ class DbCore
 
 
     //初回接続してきたユーザーのuser_idとaccesstokenをDBに記録するfunction
-    public function storageToken($user_id, $access_token)
+    public static function storageToken($user_id, $access_token)
     {
+        $db = self::dbSet();
         try {
             //SQL文　db内の最新記事の日付の取得を指定
             $sqlQuery = "INSERT INTO fb_token (user_id, access_token) VALUES(:user_id, :access_token)";
-            $sqlStatement = $this->db->prepare($sqlQuery);
+            $sqlStatement = $db->prepare($sqlQuery);
             $sqlStatement->bindValue(':user_id', $user_id);
             $sqlStatement->bindValue(':access_token', $access_token);
             $sqlStatement->execute();
@@ -91,19 +92,19 @@ class DbCore
         }
     }
 
-    public function updateToken($user_id, $access_token)
+    public static function updateToken($user_id, $access_token)
     {
         $db = new PDO(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
         try {
             //SQL文　db内の最新記事の日付の取得を指定
-            $sqlQuery = "INSERT INTO fb_token (user_id, access_token) VALUES(:user_id, :access_token)";
+            $sqlQuery = "UPDATE fb_token SET access_token = :access_token WHERE user_id = :user_id";
             $sqlStatement = $db->prepare($sqlQuery);
             $sqlStatement->bindValue(':user_id', $user_id);
             $sqlStatement->bindValue(':access_token', $access_token);
             $sqlStatement->execute();
 
         } catch (PDOException $e) {
-                die('storageTokenに不具合があります。' .$e->getMessage());
+                die('updateTokenに不具合があります。' .$e->getMessage());
         }
 
     }
@@ -133,7 +134,7 @@ class DbCore
 
    //配列の内容をデータベースに書き込むfunction.
    //FacebookCore->getFeed();で取得した配列をMySQLへ書き込むために使う
-    public static function storageFeedToDb($page_id, $array)
+    public static function storageFeed($page_id, $array)
     {
         $db = self::dbSet();
 
@@ -166,23 +167,19 @@ class DbCore
 
                 //実行
                 $sqlStatement->execute();
-
-
             }
           //DB切断
-            $db = null;
-
         }
         //例外処理
         catch (PDOException $e) {
-            die('storageFeedToDbに不具合があります。' .$e->getMessage());
+            die('storageFeedに不具合があります。' .$e->getMessage());
         }
     }
 
 
-       //dbからのDataを取得し、連想配列にして出力
+       //dbからのDataを取得して、プロパティ$dataに格納する
        //取得件数は新規日付20件
-        function getDataFromDb($page_id)
+        public function getData($page_id)
         {
 
           //try,catchでPDOの例外を検知する
@@ -194,14 +191,9 @@ class DbCore
                 $sqlStatement->bindValue(':page_id', $page_id);
                 $sqlStatement->execute();
 
-                //SQLから取得したデータを配列に変換
-                $data = $sqlStatement->fetchall(PDO::FETCH_ASSOC);
-
                 //出力
-                return $data;
+                $this->data = $sqlStatement;
 
-                //DB切断
-                $db = null;
 
                 //PDOでエラーが発生した場合の例外処理
             } catch (PDOException $e) {
@@ -209,5 +201,10 @@ class DbCore
             }
         }
 
+        public function outputData()
+        {
+                //SQLから取得したデータを配列に変換
+                return $this->data->fetchall(PDO::FETCH_ASSOC);
+        }
 
 }

@@ -10,8 +10,6 @@
 require_once('constant.php');
 //composerのrequire
 require_once("vendor/autoload.php");
-//functionのrequire
-require_once('function.php');
 
 
 //FacebookSDKの中から、使用するものを選択
@@ -30,13 +28,13 @@ class FacebookCore
 
     //プロパティ
     private $session;
-    private $page_id;
+    ///private $page_id;
 
     //コンストラクタ
-    public function __construct($session = null, $page_id = null)
+    public function __construct($session = null)
     {
         $this->session = $session;
-        $this->page_id = $page_id;
+        ///$this->page_id = $page_id;
     }
 
 
@@ -63,10 +61,10 @@ class FacebookCore
 
 
    //facebookの情報を配列にして出力するfunction
-    public function getFeed()
+    public function getFeed($page_id)
     {
         //クエリ文をセット
-        $query = "/{$this->page_id}/feed";
+        $query = "/{$page_id}/feed";
         //フィードを配列として取得
         $feed = $this->getData($query);
         //フィードを出力

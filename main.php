@@ -10,8 +10,10 @@
 require_once('constant.php');
 //composerのrequire
 require_once("vendor/autoload.php");
-//functionのrequire
-require_once('function.php');
+//facebookクラスのrequire
+require_once('facebook_core.php');
+//dbCoreクラスのrequire
+require_once('dbcore.php');
 
 //FacebookSDKの中から、使用するものを選択
 use Facebook\FacebookSession;
@@ -45,7 +47,9 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
 if (isset($session)) {
 
     //dbから、ページに表示用のデータを取得
-    $data = getDataFromDb($user_id);
+    $db = new DbCore();
+    $db->getData($user_id);
+    $data = $db->outputData();
 
 //以下、html
 
@@ -77,7 +81,9 @@ if (isset($session)) {
    ?>
 
 <div id="icon">
-    <img src="<?php print(getIcon($session, $d['editor_id'])); ?>">
+    <img src="<?php $icon = new FacebookCore($session);
+                    $url = $icon->getIcon($d['editor_id']);
+                    print($url); ?>">
 </div>
 
   <a href="http://www.facebook.com/<?php print($d['editor_id']); ?> "><?php print($d['editor_name']);?></a>

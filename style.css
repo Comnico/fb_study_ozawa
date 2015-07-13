@@ -74,6 +74,10 @@
         word-wrap: break-word;
         /*文字をはみださない*/
     }
+    .post a:visited {
+        color: #000000;
+      }
+        }
     #icon{
         position: relative;
         left: 50px;
