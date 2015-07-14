@@ -1,5 +1,10 @@
 <?php
-
+/**
+*getfeed.php
+*本ツールにログインしたユーザーのフィードを、
+*Facebookから取得して、DBに保存するファイル
+*cronで定期的に実行される。
+*/
 /*******************************************************************************************/
 
     /****************************************
@@ -17,12 +22,6 @@ require_once('dbcore.php');
 
 //FacebookSDKの中から、使用するものを選択
 use Facebook\FacebookSession;
-use Facebook\FacebookRedirectLoginHelper;
-use Facebook\FacebookRequest;
-use Facebook\FacebookRequestException;
-use Facebook\GraphUser;
-use Facebook\GraphLocation;
-use Facebook\GraphSessionInfo;
 
 //FacebookSessionの呼び出し
 FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
@@ -31,23 +30,21 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
 
 
     //全てのユーザーIDを出力
-    $user_data = DbCore::userDump();
+$user_data = DbCore::userDump();
 
-    //foreachで、出力した全てのユーザーごとに、
-    //FeedをFacebookから取得し、DBへ書き込みを行う
-    foreach($user_data as $u){
-
+//foreachで、出力した全てのユーザーごとに、
+//FeedをFacebookから取得し、DBへ書き込みを行う
+foreach ($user_data as $user) {
         //アクセストークンを利用してセッションを開始する
-        $session = FacebookCore::getSession($u['access_token']);
-        $user_id = $u['user_id'];
+        $session = FacebookCore::getSession($user['access_token']);
+        $user_id = $user['user_id'];
 
         //指定したユーザーIDのページを取得する
         $fb = new FacebookCore($session);
-        $feed = $fb->getFeed($user_id);
+        $feed = $fb->outputFeed($user_id);
 
         //フィードをDBへ保存
         DbCore::storageFeed($user_id, $feed);
-        }
+}
 
     print('done.');
-?>

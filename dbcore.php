@@ -1,5 +1,8 @@
 <?php
-
+/**
+*dbcore.php
+*DBへの読み書き等のファンクションをまとめたクラス"DbCore"を記載したファイル
+*/
 /*******************************************************************************************/
 
     /****************************************
@@ -11,24 +14,7 @@ require_once('constant.php');
 //composerのrequire
 require_once("vendor/autoload.php");
 
-
-
-//FacebookSDKの中から、使用するものを選択
-use Facebook\FacebookSession;
-use Facebook\FacebookRedirectLoginHelper;
-use Facebook\FacebookRequest;
-use Facebook\FacebookRequestException;
-use Facebook\GraphUser;
-use Facebook\GraphLocation;
-use Facebook\GraphSessionInfo;
-
 /*******************************************************************************************/
-
-        /****************************************
-        *DB関連のfunction
-        ****************************************/
-
-
 
 
 class DbCore
@@ -51,9 +37,9 @@ class DbCore
 
     //新規登録か既存登録か確認するfunction
     //新規の場合は文字列'new'を、既存の場合は文字列'exist'を返す
-    public static function checkNewOrNot($user_id)
+    public static function isNew($user_id)
     {
-    $db = self::dbSet();
+        $db = self::dbSet();
         try {
             //SQL文　指定のユーザーIDが登録されているか確認する
             //無ければ0を、あれば1を返す
@@ -65,12 +51,12 @@ class DbCore
             //DBから取得した値を取り出し、0と同じであればnewを、それ以外は1を返す
             $count = $sqlStatement->fetch(PDO::FETCH_ASSOC);
             $count_int =  (int)$count['COUNT(user_id)'];
-            $result = ($count_int == 0 ? 'new' : 'exist');
+            $result = ($count_int == 0 ? true : false);
             return $result;
 
-            } catch (PDOException $e) {
-                die('checkNewOrNotに不具合があります。' .$e->getMessage());
-            }
+        } catch (PDOException $e) {
+                die('isNewに不具合があります。' .$e->getMessage());
+        }
 
     }
 
@@ -133,7 +119,6 @@ class DbCore
 
 
    //配列の内容をデータベースに書き込むfunction.
-   //FacebookCore->getFeed();で取得した配列をMySQLへ書き込むために使う
     public static function storageFeed($page_id, $array)
     {
         $db = self::dbSet();
@@ -168,10 +153,7 @@ class DbCore
                 //実行
                 $sqlStatement->execute();
             }
-          //DB切断
-        }
-        //例外処理
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             die('storageFeedに不具合があります。' .$e->getMessage());
         }
     }
@@ -179,11 +161,10 @@ class DbCore
 
        //dbからのDataを取得して、プロパティ$dataに格納する
        //取得件数は新規日付20件
-        public function getData($page_id)
-        {
-
+        public function requestData($page_id)
+       {
           //try,catchでPDOの例外を検知する
-            try {
+        try {
                 //SQLクエリをセット
                 $sqlQuery = "SELECT id, page_id, editor_id, editor_name, post_id, post_date, post_message, image_url
                             FROM fb_feed WHERE page_id = :page_id ORDER BY post_date DESC LIMIT 20";
@@ -196,9 +177,9 @@ class DbCore
 
 
                 //PDOでエラーが発生した場合の例外処理
-            } catch (PDOException $e) {
+        } catch (PDOException $e) {
                 die('エラーが発生しました。' .$e->getMessage());
-            }
+        }
         }
 
         public function outputData()
@@ -206,5 +187,4 @@ class DbCore
                 //SQLから取得したデータを配列に変換
                 return $this->data->fetchall(PDO::FETCH_ASSOC);
         }
-
 }

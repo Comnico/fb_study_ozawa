@@ -17,12 +17,6 @@ require_once('dbcore.php');
 
 //FacebookSDKの中から、使用するものを選択
 use Facebook\FacebookSession;
-use Facebook\FacebookRedirectLoginHelper;
-use Facebook\FacebookRequest;
-use Facebook\FacebookRequestException;
-use Facebook\GraphUser;
-use Facebook\GraphLocation;
-use Facebook\GraphSessionInfo;
 
 //セッションのスタート
 //$_SESSIONの変数を入れ替える
@@ -48,7 +42,7 @@ if (isset($session)) {
 
     //dbから、ページに表示用のデータを取得
     $db = new DbCore();
-    $db->getData($user_id);
+    $db->requestData($user_id);
     $data = $db->outputData();
 
 //以下、html
@@ -72,36 +66,35 @@ if (isset($session)) {
 <div class="main">
 <div class="contents">
 
-    <?php
+<?php
 
  //foreachで展開。post_messageとimage_urlがnullの場合は、出力しないようにする
 
- foreach($data as $d){
-   print('<div class="post">');
-   ?>
+foreach ($data as $d) {
+        //投稿者のアイコンを取得
+        $icon = new FacebookCore($session);
+        $url = $icon->getIcon($d['editor_id']);
 
-<div id="icon">
-    <img src="<?php $icon = new FacebookCore($session);
-                    $url = $icon->getIcon($d['editor_id']);
-                    print($url); ?>">
-</div>
+        print('<div class="post">');
+    ?>
 
-  <a href="http://www.facebook.com/<?php print($d['editor_id']); ?> "><?php print($d['editor_name']);?></a>
-  <a href="http://www.facebook.com/<?php print($d['post_id']); ?> "><?php print($d['post_date']);?></a>
-                        <?php if (isset($d['post_message'])) {
-                            print($d['post_message']);
-                        }
-                        ?>
-                <?php if (isset($d['image_url'])) {
-                    print('<img src="' . $d['image_url'] . '">');
-                    }
-                    ?>
-                <?php print('</div>'); ?>
+    <div id="icon"><img src="<?php print($url); ?>"></div>
+    <a href="http://www.facebook.com/<?php print($d['editor_id']); ?> "><?php print($d['editor_name']);?></a>
+    <a href="http://www.facebook.com/<?php print($d['post_id']); ?> "><?php print($d['post_date']);?></a>
 
-
-<?php
-
+    <?php
+    //投稿本文がある場合は出力する
+    if (isset($d['post_message'])) {
+        print($d['post_message']);
     }
+    //画像がある場合は、画像のURLを出力する。
+    if (isset($d['image_url'])) {
+        print('<img src="' . $d['image_url'] . '">');
+    }
+
+    print('</div>');
+}
+
 ?>
 
 

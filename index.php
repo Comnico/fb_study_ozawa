@@ -13,7 +13,8 @@
         <div id="title">FB Study</div>
     </div>
     <div class="contents">
-        ソーシャルアカウントでログイン<br/>
+        ソーシャルアカウントでログイン
+        <br/>
         <div id="button"><a href="login.php">Facebookログイン</a></div>
     </div>
 

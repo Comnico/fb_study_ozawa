@@ -1,5 +1,9 @@
 <?php
-
+/**
+*login.php
+*Facebookへのログインと、セッション情報、アクセストークンの取得と、
+*トークンのDB保存とリダイレクトを行うファイル
+*/
 /*******************************************************************************************/
 
     /****************************************
@@ -27,52 +31,48 @@ FacebookSession::setDefaultApplication(APP_ID, APP_SECRET);
 
 /*******************************************************************************************/
 
-    /****************************************
-    *Facebookからセッション情報を入手する
-    ****************************************/
-
 //リダイレクト先のURLを指定し、インスタンスを生成
 $helper = new FacebookRedirectLoginHelper(REDIRECT_URL);
 
 //セッション情報を取得
 try {
-    $session = $helper->getSessionFromRedirect();
-
- // Facebookがエラーを返した場合に、例外をcatchする
+        $session = $helper->getSessionFromRedirect();
 } catch (Exception $ex) {
     die($ex->getMessage);
 }
 
-//セッションを保持している場合は、main.phpに飛ぶ。
-//それ以外は、facebookへリクエストを送る
+//セッションを保持しているかどうか確認する。
 if (isset($session)) {
-
-    //ログインしたユーザーのFBユーザーIDとアクセストークンをDBに保管する
-
-    //トークンを入手
+    //セッション情報から、トークンとユーザーIDを入手
     $access_token = $session->getToken();
-    //ユーザーID入手
     $session_info = $session->getSessionInfo()->asArray();
     $user_id = $session_info['user_id'];
 
-    //新規ユーザーか既存ユーザーか確認。新規の場合は、DBへの保存と、
-    //FBからフィードをプッシュでとってくる
-    if (DbCore::checkNewOrNot($user_id) == 'new') {
+    //新規ユーザーか既存ユーザーか確認。
+    //新規の場合は、トークンをDBへ保存し、
+    //FBからフィードを取得する。
+    //既存ユーザーの場合、トークンをアップデートする。
 
-        //IDとトークンの保存
+    //新規ユーザーの場合
+    if (DbCore::isNew($user_id) == true) {
+        //トークンの保存
         DbCore::storageToken($user_id, $access_token);
 
-        //Feedの取得と、DBへ保存
-        //指定したユーザーIDのページを取得する
+        //Feedの取得
         $fb = new FacebookCore($session);
-        $feed = $fb->getFeed($user_id);
+        $feed = $fb->outputFeed($user_id);
+
+        //DBへの保存
         DbCore::storageFeed($user_id, $feed);
 
-    } else {
+    //既存ユーザーの場合、
+    //トークンをアップデートする
+    } elseif (DbCore::isNew($user_id) == false) {
         DbCore::updateToken($user_id, $access_token);
     }
 
-    //セッション情報と、ログアウトURLをmain.phpに渡す
+    //セッション情報と、ログインしたユーザーID、ログアウトURLを
+    //$_SESSIONに格納して、main.phpに渡す
     $_SESSION['session'] = $session;
     $_SESSION['user_id'] = $user_id;
     $_SESSION['logout_url'] = $helper->getLogoutUrl($session, AFTER_LOGOUT_URL);
@@ -80,7 +80,6 @@ if (isset($session)) {
     //main.phpへリダイレクト
     header('location: main.php');
     exit();
-
 
     //以下、セッション情報を持っていない場合
 } else {

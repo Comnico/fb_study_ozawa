@@ -1,9 +1,11 @@
 <?php
-
+/**
+*constant.php
+*定数をまとめたファイル
+*/
 /***************************************************
 *Facebook認証用の定数
 ****************************************************/
-
 
 const APP_ID = '452878368210796'; //FacebookAppのID
 const APP_SECRET = 'f0e25cc2d8ce6f0a8e2e80bf35c64081'; //FacebookAppのSecret
@@ -36,12 +38,4 @@ if ($hostname == 'Darwin') {
     define('DATABASE_NAME', "mysql:host=${server};dbname=${db};charset=utf8"); //データベース名、アドレス
     define('DATABASE_USERNAME', $username);   //　ユーザー名
     define('DATABASE_PASSWORD', $password); // パスワード
-
 }
-
-/***************************************************
-*FBアカウント
-****************************************************/
-
-const ME = '853981858011604';
-const NIKU ='1668777220012733';
