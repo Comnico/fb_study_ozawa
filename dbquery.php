@@ -1,5 +1,9 @@
 <?php
-
+/**
+*dbquery.php
+*SQLクエリの作成等をまとめたクラス。
+*作成中。
+*/
 class dbQuery
 {
     private $table;
