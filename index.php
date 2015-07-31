@@ -18,10 +18,7 @@
         <div id="button"><a href="login.php">Facebookログイン</a></div>
         <script>
             window.intercomSettings = {
-                app_id: "bxs0xbfr",
-                name: "Nikola Tesla", // Full name
-                email: "nikola@example.com", // Email address
-                created_at: 1312182000 // Signup date as a Unix timestamp
+                app_id: "m718ows6"
             };
         </script>
         <script>
@@ -46,7 +43,7 @@
                         var s = d.createElement('script');
                         s.type = 'text/javascript';
                         s.async = true;
-                        s.src = 'https://widget.intercom.io/widget/bxs0xbfr';
+                        s.src = 'https://widget.intercom.io/widget/m718ows6';
                         var x = d.getElementsByTagName('script')[0];
                         x.parentNode.insertBefore(s, x);
                     }
@@ -58,7 +55,6 @@
                 }
             })()
         </script>
-
 
     </div>
 
