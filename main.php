@@ -105,8 +105,8 @@ foreach ($data as $d) {
 <script>
     window.intercomSettings = {
         app_id: "bxs0xbfr",
-        name: "CUSTOMER", // Full name
-        email: "CUSTOMER@COMNICO.JP", // Email address
+        name: "<?php print($user_id);?>", // Full name
+        email: "THIS_IS_THE_TEST@COMNICO.JP", // Email address
         created_at: 1438300800 // Signup date as a Unix timestamp
     };
 </script>
